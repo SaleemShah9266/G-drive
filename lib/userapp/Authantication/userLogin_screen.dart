@@ -1,20 +1,24 @@
+import 'package:drivers_app/MainScreens/main_screen.dart';
 import 'package:drivers_app/SplashScreen/splash_screen.dart';
-import 'package:drivers_app/authantication/signup_screen.dart';
+import 'package:drivers_app/authantication/driversignup_screen.dart';
+import 'package:drivers_app/userapp/Authantication/usersignup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../Widgets/progress_dialogue.dart';
-import '../global/global.dart';
+import '../../Widgets/progress_dialogue.dart';
+import '../../global/global.dart';
 
-class SigInScreen extends StatefulWidget {
-  const SigInScreen({super.key});
+
+
+class UserSigInScreen extends StatefulWidget {
+  const UserSigInScreen({super.key});
 
   @override
-  State<SigInScreen> createState() => _SigInScreenState();
+  State<UserSigInScreen> createState() => _UserSigInScreenState();
 }
 
-class _SigInScreenState extends State<SigInScreen> {
+class _UserSigInScreenState extends State<UserSigInScreen> {
   TextEditingController emailTextEditingController = TextEditingController();
   TextEditingController passwordTextEditingController = TextEditingController();
 
@@ -24,11 +28,11 @@ class _SigInScreenState extends State<SigInScreen> {
     } else if (passwordTextEditingController.text.isEmpty) {
       Fluttertoast.showToast(msg: "Password is required");
     } else {
-      loginDriverNow();
+      loginUserNow();
     }
   }
 
-  loginDriverNow() async {
+  loginUserNow() async {
     showDialog(
         context: context,
         barrierDismissible: false,
@@ -55,7 +59,7 @@ class _SigInScreenState extends State<SigInScreen> {
       Fluttertoast.showToast(msg: "Login Successful");
 
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) => MySplashScreen()));
+          context, MaterialPageRoute(builder: (context) => MainScreen()));
     } else {
       Navigator.pop(context);
       Fluttertoast.showToast(msg: "Error Occured during login .");
@@ -82,7 +86,7 @@ class _SigInScreenState extends State<SigInScreen> {
                 height: 10,
               ),
               Text(
-                "Login as a Driver",
+                "Log In As a User",
                 style: TextStyle(
                   fontSize: 24,
                   color: Colors.grey,
@@ -170,7 +174,7 @@ class _SigInScreenState extends State<SigInScreen> {
                 ),
                 onPressed: () {
                   Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => SignUpScreen()));
+                      MaterialPageRoute(builder: (context) => UserSignUpScreen()));
                 },
               ),
             ],
