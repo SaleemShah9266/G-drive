@@ -22,228 +22,174 @@ class _DriverSignUpScreenState extends State<DriverSignUpScreen> {
 
   validateForm() {
     if (nameTextEditingController.text.length < 3) {
-      Fluttertoast.showToast(msg: "Name must be atleast 3 character");
+      Fluttertoast.showToast(msg: "Name must be at least 3 characters");
     } else if (!emailTextEditingController.text.contains("@")) {
       Fluttertoast.showToast(msg: "Email is not valid");
     } else if (phoneTextEditingController.text.isEmpty) {
-      Fluttertoast.showToast(msg: "phone number is Required");
+      Fluttertoast.showToast(msg: "Phone number is required");
     } else if (passwordTextEditingController.text.length < 6) {
-      Fluttertoast.showToast(msg: "Password must be atleast 6 character");
+      Fluttertoast.showToast(msg: "Password must be at least 6 characters");
     } else {
       saveDriverInfoNow();
     }
   }
 
-  ///Save drive Info now
-
   saveDriverInfoNow() async {
     showDialog(
-        context: context,
-        barrierDismissible: false,
-        builder: (BuildContext context) {
-          return ProgressDialogue(
-            message: "Processing please wait",
-          );
-        }
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return ProgressDialogue(
+          message: "Processing, please wait",
         );
-    /// saving data to firebase
-    final User? firebaseUser = (
-    await fAuth.createUserWithEmailAndPassword(
-        email: emailTextEditingController.text.trim(),
+      },
+    );
 
-        password: passwordTextEditingController.text.trim(),
-    ).catchError((msg){
+    final User? firebaseUser = (await fAuth
+        .createUserWithEmailAndPassword(
+      email: emailTextEditingController.text.trim(),
+      password: passwordTextEditingController.text.trim(),
+    )
+        .catchError((msg) {
       Navigator.pop(context);
       Fluttertoast.showToast(msg: "Error: " + msg.toString());
-
-    })
-    ).user;
+    }))
+        .user;
 
     if (firebaseUser != null) {
+      // Set displayName
+      await firebaseUser.updateProfile(displayName: nameTextEditingController.text.trim());
+
       Map driverMap = {
         "id": firebaseUser.uid,
         "name": nameTextEditingController.text.trim(),
-      "email": emailTextEditingController.text.trim(),
-      "phone": phoneTextEditingController.text.trim(),
+        "email": emailTextEditingController.text.trim(),
+        "phone": phoneTextEditingController.text.trim(),
+      };
+      DatabaseReference driveRef = FirebaseDatabase.instance.ref().child("drivers");
+      driveRef.child(firebaseUser.uid).set(driverMap);
 
+      currentFirebaseUser = firebaseUser;
+      Fluttertoast.showToast(msg: "Account has been created.");
 
-    };
-    DatabaseReference driveRef =  FirebaseDatabase.instance.ref().child("drivers");
-    driveRef.child(firebaseUser.uid).set(driverMap);
-
-    currentFirebaseUser = firebaseUser;
-      Fluttertoast.showToast(msg: "Account has been Created.");
-
-      Navigator.push(context, MaterialPageRoute(builder: (context)=> CarInfoScreen()));
-
-
-
-    }
-    else {
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => CarInfoScreen()),
+      );
+    } else {
       Navigator.pop(context);
-      Fluttertoast.showToast(msg: "Account has not been created .");
+      Fluttertoast.showToast(msg: "Account has not been created.");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black26,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(20.0),
+          padding: const EdgeInsets.all(30.0),
           child: Column(
             children: [
-              SizedBox(
-                height: 10,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Image.asset("assets/images/logo1.png"),
-              ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 50),
+              Image.asset("assets/images/logo1.png", height: 150),
+              SizedBox(height: 20),
               Text(
                 "Register as a Driver",
                 style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.grey,
+                  fontSize: 28,
+                  color: Colors.black87,
                   fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              TextField(
+              SizedBox(height: 20),
+              _buildTextField(
                 controller: nameTextEditingController,
-                style: TextStyle(color: Colors.grey),
-                decoration: InputDecoration(
-                  labelText: "Name",
-                  hintText: "Name",
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
-                  ),
-                ),
+                labelText: "Name",
+                icon: Icons.person,
               ),
-              SizedBox(
-                height: 10,
-              ),
-              TextField(
+              SizedBox(height: 20),
+              _buildTextField(
                 controller: emailTextEditingController,
+                labelText: "Email",
+                icon: Icons.email,
                 keyboardType: TextInputType.emailAddress,
-                style: TextStyle(color: Colors.grey),
-                decoration: InputDecoration(
-                  labelText: "Email",
-                  hintText: "Email",
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              TextField(
+              SizedBox(height: 20),
+              _buildTextField(
                 controller: phoneTextEditingController,
+                labelText: "Phone",
+                icon: Icons.phone,
                 keyboardType: TextInputType.phone,
-                style: TextStyle(color: Colors.grey),
-                decoration: InputDecoration(
-                  labelText: "Phone",
-                  hintText: "phone",
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              TextField(
+              SizedBox(height: 20),
+              _buildTextField(
                 controller: passwordTextEditingController,
-                keyboardType: TextInputType.text,
+                labelText: "Password",
+                icon: Icons.lock,
                 obscureText: true,
-                style: TextStyle(color: Colors.grey),
-                decoration: InputDecoration(
-                  labelText: "Password",
-                  hintText: "Password",
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
-                  ),
-                ),
               ),
-              SizedBox(
-                height: 30,
-              ),
+              SizedBox(height: 30),
               ElevatedButton(
-                onPressed: () {
-                  validateForm();
-                },
+                onPressed: validateForm,
                 style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   backgroundColor: Colors.lightBlueAccent,
+                  padding: EdgeInsets.symmetric(vertical: 15),
                 ),
-                child: Text(
-                  "Create account",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                child: Center(
+                  child: Text(
+                    "Create Account",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 20),
               TextButton(
                 child: Text(
-                  "Already have an Account? Login Here",
-                  style: TextStyle(
-                    color: Colors.grey,
-                  ),
+                  "Already have an account? Login here",
+                  style: TextStyle(color: Colors.blueAccent),
                 ),
                 onPressed: () {
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => DriverSigInScreen()));
                 },
-              )
+              ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String labelText,
+    IconData? icon,
+    bool obscureText = false,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      keyboardType: keyboardType,
+      style: TextStyle(color: Colors.black87),
+      decoration: InputDecoration(
+        labelText: labelText,
+        filled: true,
+        fillColor: Colors.grey[200],
+        prefixIcon: Icon(icon, color: Colors.black54),
+        contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+          borderSide: BorderSide.none,
         ),
       ),
     );

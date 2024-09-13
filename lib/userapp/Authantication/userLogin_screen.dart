@@ -1,15 +1,10 @@
-import 'package:drivers_app/MainScreens/main_screen.dart';
-import 'package:drivers_app/SplashScreen/splash_screen.dart';
-import 'package:drivers_app/authantication/driversignup_screen.dart';
-import 'package:drivers_app/userapp/Authantication/usersignup_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import '../../MainScreens/main_screen.dart';
 import '../../Widgets/progress_dialogue.dart';
 import '../../global/global.dart';
-
-
+import 'usersignup_screen.dart'; // Assuming UserSignUpScreen is imported correctly
 
 class UserSigInScreen extends StatefulWidget {
   const UserSigInScreen({super.key});
@@ -42,13 +37,13 @@ class _UserSigInScreenState extends State<UserSigInScreen> {
           );
         });
 
-    /// saving data to firebase
+    // Saving data to Firebase
     final User? firebaseUser = (await fAuth
-            .signInWithEmailAndPassword(
+        .signInWithEmailAndPassword(
       email: emailTextEditingController.text.trim(),
       password: passwordTextEditingController.text.trim(),
     )
-            .catchError((msg) {
+        .catchError((msg) {
       Navigator.pop(context);
       Fluttertoast.showToast(msg: "Error: " + msg.toString());
     }))
@@ -62,120 +57,135 @@ class _UserSigInScreenState extends State<UserSigInScreen> {
           context, MaterialPageRoute(builder: (context) => MainScreen()));
     } else {
       Navigator.pop(context);
-      Fluttertoast.showToast(msg: "Error Occured during login .");
+      Fluttertoast.showToast(msg: "Error Occurred during login.");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Image.asset("assets/images/logo1.png"),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "Log In As a User",
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
+              Center(
+                child: Image.asset(
+                  "assets/images/logo1.png",
+                  height: 150,
                 ),
               ),
-              SizedBox(
-                height: 10,
+              const SizedBox(height: 30),
+              const Text(
+                "Welcome Back!",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
               ),
+              const SizedBox(height: 10),
+              const Text(
+                "Login to continue",
+                style: TextStyle(
+                  fontSize: 18,
+                  color: Colors.grey,
+                ),
+              ),
+              const SizedBox(height: 40),
               TextField(
                 controller: emailTextEditingController,
                 keyboardType: TextInputType.emailAddress,
-                style: TextStyle(color: Colors.grey),
+                style: const TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   labelText: "Email",
-                  hintText: "Email",
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
+                  hintText: "Enter your email",
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: BorderSide.none,
                   ),
-                  labelStyle: TextStyle(
+                  prefixIcon: Icon(Icons.email, color: Colors.grey[600]),
+                  hintStyle: const TextStyle(
                     color: Colors.grey,
                     fontSize: 14,
                   ),
+                  labelStyle: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 16,
+                  ),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              const SizedBox(height: 20),
               TextField(
                 controller: passwordTextEditingController,
                 keyboardType: TextInputType.text,
                 obscureText: true,
-                style: TextStyle(color: Colors.grey),
+                style: const TextStyle(color: Colors.black),
                 decoration: InputDecoration(
                   labelText: "Password",
-                  hintText: "Password",
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
+                  hintText: "Enter your password",
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
+                    borderSide: BorderSide.none,
                   ),
-                  labelStyle: TextStyle(
+                  prefixIcon: Icon(Icons.lock, color: Colors.grey[600]),
+                  hintStyle: const TextStyle(
                     color: Colors.grey,
                     fontSize: 14,
                   ),
-                ),
-              ),
-              SizedBox(
-                height: 30,
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  validateForm();
-                  // Navigator.push(context, MaterialPageRoute(builder: (context)=> CarInfoScreen()));
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.lightBlueAccent,
-                ),
-                child: Text(
-                  "LogIn",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              TextButton(
-                child: Text(
-                  "Donot have an account? signUp",
-                  style: TextStyle(
+                  labelStyle: const TextStyle(
                     color: Colors.grey,
+                    fontSize: 16,
                   ),
                 ),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => UserSignUpScreen()));
-                },
+              ),
+              const SizedBox(height: 30),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    validateForm();
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 100, vertical: 16),
+                    backgroundColor: Colors.blueAccent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+                    elevation: 5,
+                  ),
+                  child: const Text(
+                    "Log In",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 15),
+              Center(
+                child: TextButton(
+                  child: const Text(
+                    "Don’t have an account? Sign Up",
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => UserSignUpScreen()));
+                  },
+                ),
               ),
             ],
           ),

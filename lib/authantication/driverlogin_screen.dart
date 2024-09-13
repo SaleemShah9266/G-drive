@@ -40,11 +40,11 @@ class _DriverSigInScreenState extends State<DriverSigInScreen> {
 
     /// saving data to firebase
     final User? firebaseUser = (await fAuth
-            .signInWithEmailAndPassword(
+        .signInWithEmailAndPassword(
       email: emailTextEditingController.text.trim(),
       password: passwordTextEditingController.text.trim(),
     )
-            .catchError((msg) {
+        .catchError((msg) {
       Navigator.pop(context);
       Fluttertoast.showToast(msg: "Error: " + msg.toString());
     }))
@@ -58,120 +58,121 @@ class _DriverSigInScreenState extends State<DriverSigInScreen> {
           context, MaterialPageRoute(builder: (context) => MySplashScreen()));
     } else {
       Navigator.pop(context);
-      Fluttertoast.showToast(msg: "Error Occured during login .");
+      Fluttertoast.showToast(msg: "Error Occured during login.");
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.symmetric(horizontal: 30.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Image.asset("assets/images/logo1.png"),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Text(
-                "Login as a Driver",
-                style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.grey,
-                  fontWeight: FontWeight.bold,
+              SizedBox(height: 60),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Image.asset("assets/images/logo1.png", height: 150),
                 ),
               ),
-              SizedBox(
-                height: 10,
+              SizedBox(height: 20),
+              Text(
+                "Welcome Back, Driver!",
+                style: TextStyle(
+                  fontSize: 28,
+                  color: Colors.black87,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 0.5,
+                ),
               ),
+              SizedBox(height: 10),
+              Text(
+                "Please sign in to continue",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey,
+                ),
+              ),
+              SizedBox(height: 30),
               TextField(
                 controller: emailTextEditingController,
                 keyboardType: TextInputType.emailAddress,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.black87),
                 decoration: InputDecoration(
                   labelText: "Email",
-                  hintText: "Email",
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
+                  hintText: "Enter your email",
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  prefixIcon: Icon(Icons.email, color: Colors.black54),
+                  contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
+              SizedBox(height: 20),
               TextField(
                 controller: passwordTextEditingController,
                 keyboardType: TextInputType.text,
                 obscureText: true,
-                style: TextStyle(color: Colors.grey),
+                style: TextStyle(color: Colors.black87),
                 decoration: InputDecoration(
                   labelText: "Password",
-                  hintText: "Password",
-                  enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(color: Colors.grey)),
-                  hintStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 12,
-                  ),
-                  labelStyle: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 14,
+                  hintText: "Enter your password",
+                  filled: true,
+                  fillColor: Colors.grey[200],
+                  prefixIcon: Icon(Icons.lock, color: Colors.black54),
+                  contentPadding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide.none,
                   ),
                 ),
               ),
-              SizedBox(
-                height: 30,
-              ),
+              SizedBox(height: 30),
               ElevatedButton(
                 onPressed: () {
                   validateForm();
-                  // Navigator.push(context, MaterialPageRoute(builder: (context)=> CarInfoScreen()));
                 },
                 style: ElevatedButton.styleFrom(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
                   backgroundColor: Colors.lightBlueAccent,
+                  padding: EdgeInsets.symmetric(vertical: 15),
                 ),
-                child: Text(
-                  "LogIn",
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                child: Center(
+                  child: Text(
+                    "Log In",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 10,
-              ),
-              TextButton(
-                child: Text(
-                  "Donot have an account? signUp",
-                  style: TextStyle(
-                    color: Colors.grey,
+              SizedBox(height: 15),
+              Center(
+                child: TextButton(
+                  child: Text(
+                    "Don't have an account? Sign Up",
+                    style: TextStyle(
+                      color: Colors.blueAccent,
+                    ),
                   ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DriverSignUpScreen()));
+                  },
                 ),
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => DriverSignUpScreen()));
-                },
               ),
             ],
           ),

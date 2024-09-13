@@ -1,7 +1,6 @@
 import 'package:drivers_app/MainScreens/main_screen.dart';
 import 'package:drivers_app/Widgets/progress_dialogue.dart';
-import 'package:drivers_app/authantication/car_info_screen.dart';
-import 'package:drivers_app/authantication/driverlogin_screen.dart';
+
 import 'package:drivers_app/global/global.dart';
 import 'package:drivers_app/userapp/Authantication/userLogin_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
