@@ -143,10 +143,13 @@ class _HomeTabPageState extends State<HomeTabPage> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ElevatedButton(
+
                       onPressed: () {
-                        // TODO: Implement find a ride logic
+
                       },
                       style: ElevatedButton.styleFrom(
+                        minimumSize: const Size(200, 50),
+                        backgroundColor: Colors.blueAccent,
                         padding: const EdgeInsets.symmetric(vertical: 14.0),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -157,9 +160,11 @@ class _HomeTabPageState extends State<HomeTabPage> {
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
+                          color: Colors.white
                         ),
                       ),
                     ),
+
                   ],
                 ),
               ),
